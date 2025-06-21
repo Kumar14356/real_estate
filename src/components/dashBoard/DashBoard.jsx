@@ -1,0 +1,95 @@
+import React from 'react';
+import { IoIosPeople } from "react-icons/io";
+import { AiOutlineCalendar } from "react-icons/ai";
+import { FiAward } from "react-icons/fi";
+import { BarChart, Bar, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+
+const DashBoard = () => {
+  const Bardata = [
+    { name: 'Jan', uv: 44, pv: 400 },
+    { name: 'Feb', uv: 30, pv: 300 },
+    { name: 'Mar', uv: 50, pv: 500 },
+    { name: 'Apr', uv: 45, pv: 450 },
+  ];
+
+  return (
+    <div className='w-full mt-30 px-8'>
+      <h1 className='font-bold text-3xl mb-8'>Dashboard</h1>
+
+      {/* Top Cards */}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+        {/* Total Users */}
+        <div className='bg-blue-50 rounded-2xl shadow-lg p-4'>
+          <div className='flex justify-between items-center mb-4'>
+            <span className='text-2xl text-green-700 rounded-full bg-green-100 h-10 w-10 flex items-center justify-center'>
+              <IoIosPeople />
+            </span>
+            <span className='text-green-700 font-semibold'>+12.5%</span>
+          </div>
+          <div className='flex justify-between items-center'>
+            <span className='text-gray-600'>Total Users</span>
+            <span className='font-bold text-lg'>93</span>
+          </div>
+        </div>
+
+        {/* Active Properties */}
+        <div className='bg-purple-50 rounded-2xl shadow-lg p-4'>
+          <div className='flex justify-between items-center mb-4'>
+            <span className='text-2xl text-red-700 rounded-full bg-red-100 h-10 w-10 flex items-center justify-center'>
+              <AiOutlineCalendar />
+            </span>
+            <span className='text-red-700 font-semibold'>-3.2%</span>
+          </div>
+          <div className='flex justify-between items-center'>
+            <span className='text-gray-600'>Active Properties</span>
+            <span className='font-bold text-lg'>154</span>
+          </div>
+        </div>
+
+        {/* Active Locations */}
+        <div className='bg-green-50 rounded-2xl shadow-lg p-4'>
+          <div className='flex justify-between items-center mb-4'>
+            <span className='text-2xl text-green-700 rounded-full bg-green-100 h-10 w-10 flex items-center justify-center'>
+              <FiAward />
+            </span>
+            <span className='text-green-700 font-semibold'>+8.7%</span>
+          </div>
+          <div className='flex justify-between items-center'>
+            <span className='text-gray-600'>Active Locations</span>
+            <span className='font-bold text-lg'>12</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Charts Section */}
+      <div className='flex flex-col lg:flex-row justify-between gap-6 mt-10'>
+        {/* Line Chart */}
+        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5'>
+          <h3 className='text-xl font-medium mb-4'>Registered Property</h3>
+          <LineChart width={500} height={300} data={Bardata} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+            <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={3} />
+            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+          </LineChart>
+        </div>
+
+        {/* Bar Chart */}
+        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5'>
+          <h3 className='text-xl font-medium mb-4'>Property</h3>
+          <BarChart width={500} height={300} data={Bardata} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} barSize={70}>
+            <XAxis dataKey="name" scale="point" padding={{ left: 50, right: 20 }} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <CartesianGrid strokeDasharray="3 3" />
+            <Bar dataKey="pv" fill="#84d88b" background={{ fill: "#eee" }} />
+          </BarChart>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DashBoard;

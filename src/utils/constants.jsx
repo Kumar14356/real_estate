@@ -1,0 +1,1 @@
+export const NAVBAR_LOGO ="https://rentalsurat-6789f.web.app/static/media/Rental-logo.61c54970d99e3664daf2.png";

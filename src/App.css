@@ -1,0 +1,23 @@
+@import "tailwindcss";
+body {
+    background-color: rgb(236, 234, 234);
+}
+
+nav ul li .active {
+    background-color: rgb(50, 83, 1) !important;
+    color: white;
+}
+
+input[type=text],
+select {
+    transition: 0.5s;
+    outline: none;
+}
+
+input[type=text]:focus {
+    border: 3px solid #06ed98 !important;
+}
+
+select:focus {
+    border: 3px solid #06ed98 !important;
+}
