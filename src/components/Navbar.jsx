@@ -70,7 +70,7 @@ const Navbar = () => {
         </ul>
 
         {/* Logout button */}
-        {/* <div className="mt-25 lg:bottom-6 w-full px-4">
+        <div className="mt-25 lg:bottom-6 w-full px-4">
           <button
             onClick={handleLogout}
             className="flex items-center gap-4 px-3 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white w-full"
@@ -80,7 +80,7 @@ const Navbar = () => {
             </span>
             <span className="hidden lg:inline font-semibold">Logout</span>
           </button>
-        </div> */}
+        </div>
       </nav>
     </>
   );

@@ -1,8 +1,7 @@
 import './App.css';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
-
 import { Provider } from 'react-redux';
-import appStore from './Utils/appStore';
+import appStore from './utils/appStore';
 
 import UserManagement from './components/userManagement/UserManagement';
 import PropertyManagementPage from './components/propertyManagement/PropertyManagementPage';
@@ -17,17 +16,16 @@ import { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// 🔐 PrivateRoute wrapper
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login" />;
+  return token ? children : <Navigate to="/login" replace />;
 };
-const isLoggedIn = () => !!localStorage.getItem('token');
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
   const location = useLocation();
 
-  // Listen for token changes (when user logs in or logs out)
   useEffect(() => {
     const token = localStorage.getItem('token');
     setIsAuthenticated(!!token);
@@ -36,69 +34,70 @@ function App() {
   return (
     <Provider store={appStore}>
       <div className="flex justify-start">
-        {/* Show navbar only when logged in */}
-        {<Navbar />}
-    <ToastContainer position="top-right" autoClose={3000} />
+        {/* ✅ Show navbar only when logged in */}
+        {isAuthenticated && <Navbar />}
+
+        <ToastContainer position="top-right" autoClose={3000} />
         <div className="flex-1">
           <Routes>
-            {/* Public Route */}
-           
+            {/* 🔓 Public Route */}
+            <Route path="/login" element={<Login />} />
 
-            {/* Protected Routes */}
+            {/* 🔒 Protected Routes */}
             <Route
               path="/"
               element={
-                
+                <PrivateRoute>
                   <DashBoard />
-                
+                </PrivateRoute>
               }
             />
             <Route
               path="/usermanagement"
               element={
-             
+                <PrivateRoute>
                   <UserManagement />
-              
+                </PrivateRoute>
               }
             />
             <Route
               path="/propertymanagement"
               element={
-             
+                <PrivateRoute>
                   <PropertyManagementPage />
-               
+                </PrivateRoute>
               }
             />
             <Route
               path="/inactive-requext"
               element={
-             
+                <PrivateRoute>
                   <InactiveRequext />
-               
+                </PrivateRoute>
               }
             />
             <Route
               path="/slide-manager"
               element={
-               
+                <PrivateRoute>
                   <SlideManager />
-                
+                </PrivateRoute>
               }
             />
             <Route
               path="/notification"
               element={
-              
+                <PrivateRoute>
                   <Notification />
-             
+                </PrivateRoute>
               }
             />
             <Route
               path="/settings"
               element={
-             
+                <PrivateRoute>
                   <Settings />
-               
+                </PrivateRoute>
               }
             />
           </Routes>
