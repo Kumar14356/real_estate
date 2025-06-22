@@ -19,6 +19,7 @@ const gptSlice = createSlice({
     openSidebar: (state) => {
       state.isOpen = true;
     },
+    
   },
 });
 

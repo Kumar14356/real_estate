@@ -9,19 +9,22 @@ const USERS_PER_PAGE = 7;
 
 const ManagemntTable = () => {
   const dispatch = useDispatch();
-  useUserManagemnt();
+  useUserManagemnt(); // fetch user data on load
 
-  const manageUser = useSelector((store) => store.manageUser.userProfile);
+  const manageUser = useSelector((store) => store.manageUser.userProfile) || [];
   const searchQuery = useSelector((store) => store.manageUser.searchQuery) || "";
-  const statusFilter = useSelector((store) => store.manageUser.statusFilter || "all");
+  const statusFilter = useSelector((store) => store.manageUser.statusFilter) || "all";
 
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Filter users safely
   const filteredUsers = Array.isArray(manageUser)
     ? manageUser.filter((user) => {
-        const matchesName = user.full_name?.toLowerCase().includes(searchQuery.toLowerCase());
+        const name = user.full_name || "";
+        const status = user.status || "";
+        const matchesName = name.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus =
-          statusFilter === "all" || user.status?.toLowerCase() === statusFilter;
+          statusFilter === "all" || status.toLowerCase() === statusFilter;
         return matchesName && matchesStatus;
       })
     : [];
@@ -43,7 +46,7 @@ const ManagemntTable = () => {
       <div className="overflow-x-auto rounded-2xl">
         <table className="min-w-[1000px] w-full text-left text-xs sm:text-sm border-collapse bg-white table-auto">
           <thead className="sticky top-0 bg-gray-100 z-10">
-            <tr className="border-b border-gray-300 h-15 font-semibold text-gray-700 ">
+            <tr className="border-b border-gray-300 h-15 font-semibold text-gray-700">
               <th className="px-4">User Name</th>
               <th className="px-4">Status</th>
               <th className="px-4">Phone</th>
@@ -72,10 +75,10 @@ const ManagemntTable = () => {
             ) : (
               paginatedUsers.map((user) => (
                 <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-50 h-15">
-                  <td className="px-4 py-2 whitespace-nowrap">{user.full_name}</td>
-                  <td className="px-4 py-2">{user.status}</td>
-                  <td className="px-4 py-2">{user.phone_no}</td>
-                  <td className="px-4 py-2 truncate max-w-[200px]">{user.email_id}</td>
+                  <td className="px-4 py-2 whitespace-nowrap">{user.username || "N/A"}</td>
+                  <td className="px-4 py-2">{user.status || "N/A"}</td>
+                  <td className="px-4 py-2">{user.phone_no || "N/A"}</td>
+                  <td className="px-4 py-2 truncate max-w-[200px]">{user.email_id || "N/A"}</td>
                   <td className="px-4 py-2">{user.broker === "Yes" ? "Broker" : "User"}</td>
                   <td
                     className="px-4 py-2 text-xl text-black cursor-pointer hover:text-green-800"
