@@ -19,7 +19,7 @@ const handleLogin = async (e) => {
   try {
     const response = await fetch('https://realstate-2.onrender.com/api/v1/user/login', {
       method: 'POST',
-      //credentials: 'include', // Only if your server sets cookies
+      credentials: 'include', // Only if your server sets cookies
       headers: {
         'Content-Type': 'application/json',
       },
