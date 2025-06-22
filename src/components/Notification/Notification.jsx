@@ -37,7 +37,7 @@ const Notification = () => {
     }
 
     try {
-      const response = await fetch("https://realstate-2.onreder.com/api/v1/notifications", {
+      const response = await fetch("https://realstate-2.onreder.com/api/v1/notification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
