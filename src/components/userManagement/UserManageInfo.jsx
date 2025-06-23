@@ -1,22 +1,54 @@
-import React, { useState } from 'react';
-import { toogleUserInfo } from '../../utils/userSlice';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsToggles } from "react-icons/bs";
 import { IoIosPeople } from "react-icons/io";
 import { FaPhoneAlt } from "react-icons/fa";
 import { IoMdAdd } from "react-icons/io";
 import ToggleButton from '../ToggleButton';
+import { toogleUserInfo } from '../../utils/userSlice';
+import { updateUserStatus } from '../../utils/ManagementSlice';
 
 const UserManageInfo = () => {
-  const [isActive, setIsActive] = useState(true); // ✅ Define state
-  const manageUser = useSelector(store => store.manageUser.userInformation);
   const dispatch = useDispatch();
+  const manageUser = useSelector((store) => store.manageUser.userInformation);
+  const [isActive, setIsActive] = useState(manageUser?.isAdmin || false);
+  useEffect(() => {
+    setIsActive(manageUser?.isAdmin || false);
+  }, [manageUser]);
+
   const closeUserInfo = () => dispatch(toogleUserInfo());
 
+  const handleToggle = async (newStatus) => {
+  setIsActive(newStatus);
+
+  if (!manageUser?._id || manageUser._id.length !== 24) {
+   
+    return;
+  }
+  try {
+    const response = await fetch(`https://realstate-2.onrender.com/api/v1/user/${manageUser._id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ isAdmin: newStatus }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to update user status');
+    }
+
+    const result = await response.json();
+    console.log('User status updated:', result);
+
+    dispatch(updateUserStatus({ userId: manageUser._id, isAdmin: newStatus }));
+  } catch (error) {
+    console.error('Error updating status:', error.message);
+  }
+};  
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
-      <div className="w-[100%] max-w-3xl max-h-[100vh] bg-white overflow-y-auto rounded-2xl relative p-8">
-
+      <div className="w-full max-w-3xl max-h-[100vh] bg-white overflow-y-auto rounded-2xl relative p-8">
         <div
           className="absolute top-3 right-5 text-xl sm:text-2xl bg-gray-100 w-8 h-8 flex items-center justify-center cursor-pointer rounded-full opacity-70"
           onClick={closeUserInfo}
@@ -25,8 +57,8 @@ const UserManageInfo = () => {
         </div>
 
         <div className="mb-4">
-          <h1 className="font-bold text-xl sm:text-2xl">Bharat Thakkar</h1>
-          <p className="text-sm sm:text-base">Broker</p>
+          <h1 className="font-bold text-xl sm:text-2xl">{manageUser?.username || "N/A"}</h1>
+          <p className="text-sm sm:text-base">{manageUser?.broker === "Yes" ? "Broker" : "User"}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between gap-4 mx-2 mt-4">
@@ -40,9 +72,7 @@ const UserManageInfo = () => {
                 {isActive ? 'Active' : 'Inactive'}
               </h3>
             </div>
-            <div className="flex items-center">
-              <ToggleButton initialState={isActive} onToggle={setIsActive} />
-            </div>
+            <ToggleButton initialState={isActive} onToggle={handleToggle} />
           </div>
 
           <div className="bg-gradient-to-l from-purple-50 p-4 rounded-xl flex items-center flex-1 shadow-sm">
@@ -51,7 +81,9 @@ const UserManageInfo = () => {
                 <IoIosPeople />
                 <span className="text-black text-sm px-2">Role</span>
               </div>
-              <h3 className="text-black font-medium text-xl py-2">Broker</h3>
+              <h3 className="text-black font-medium text-xl py-2">
+                {manageUser?.broker === "Yes" ? "Broker" : "User"}
+              </h3>
             </div>
           </div>
         </div>
@@ -63,7 +95,7 @@ const UserManageInfo = () => {
                 <FaPhoneAlt />
                 <span className="text-black text-sm px-2">Phone</span>
               </div>
-              <h3 className="text-black font-medium text-xl py-2">{manageUser.phone_no}</h3>
+              <h3 className="text-black font-medium text-xl py-2">{manageUser?.phone_no || "N/A"}</h3>
             </div>
           </div>
 
@@ -73,7 +105,7 @@ const UserManageInfo = () => {
                 <IoMdAdd />
                 <span className="text-black text-sm px-2">Email</span>
               </div>
-              <h3 className="text-black font-medium text-xl py-2">{manageUser.email_id}</h3>
+              <h3 className="text-black font-medium text-xl py-2">{manageUser?.email || "N/A"}</h3>
             </div>
           </div>
         </div>
@@ -92,3 +124,4 @@ const UserManageInfo = () => {
 };
 
 export default UserManageInfo;
+

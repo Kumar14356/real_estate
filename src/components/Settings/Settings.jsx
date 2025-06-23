@@ -15,16 +15,16 @@ const SettingsPage = () => {
   }, [darkMode]);
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white flex items-center justify-center">
+    <div className=" min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white flex items-center justify-center">
       <div className="w-full max-w-4xl m-auto bg-white dark:bg-gray-800 shadow-2xl rounded-2xl">
-        <header className="flex justify-between items-center p-4 dark:bg-gray-700 shadow-sm">
-          <h2 className="text-2xl font-semibold flex items-center gap-2">⚙️ Account Settings</h2>
+        <header className=" flex justify-between items-center p-4 dark:bg-gray-700 shadow-sm">
+          <h2 className="text-2xl font-semibold flex items-center gap-2 ">⚙️ Account Settings</h2>
           <button
             onClick={() => dispatch(toggleDarkMode())}
-            className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-600"
+            className="flex items-center gap-2 px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-600 hover:opacity-90 transition"
           >
             {darkMode ? <Sun size={18} /> : <Moon size={18} />}
-            <span>Appearance</span>
+            <span>{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         </header>
 
@@ -57,6 +57,7 @@ const SettingsPage = () => {
                 <label className="block mb-1 font-medium">Language</label>
                 <select className="w-full p-2 border dark:border-gray-600 rounded-md dark:bg-gray-600">
                   <option>English</option>
+                  <option>Hindi</option>
                 </select>
               </div>
               <div className="flex items-end justify-end md:col-span-2">

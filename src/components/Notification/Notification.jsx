@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import useUserManagement from "../../Hoocks/useUserManagemnt";
 
 const Notification = () => {
   useUserManagement()
-  const userProfiles = useSelector((state) => state.manageUser?.userProfile ?? []);
+  const rawUserProfiles = useSelector((state) => state.manageUser.userProfile);
+
+  const userProfiles = useMemo(() => rawUserProfiles || [], [rawUserProfiles]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -37,20 +39,18 @@ const Notification = () => {
     }
 
     try {
-      const response = await fetch("https://realstate-2.onreder.com/api/v1/notification", {
+      const response = await fetch("https://realstate-2.onrender.com/api/v1/notification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title,
-          message:description,
+          title:title,
+          message: description,
           userIds: selectedUsers,
         }),
       });
-console.log( title,
-          description,
-          {userIds: selectedUsers},)
+   
       if (response.ok) {
         alert("✅ Notification sent successfully");
         setTitle("");
@@ -148,8 +148,8 @@ console.log( title,
                           {user.status === true
                             ? "Inactive"
                             : user.status === false
-                            ? "Active"
-                            : "N/A"}
+                              ? "Active"
+                              : "N/A"}
                         </p>
                       </div>
                       <input

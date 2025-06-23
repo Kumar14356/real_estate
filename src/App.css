@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 body {
     background-color: rgb(236, 234, 234);
 }
@@ -40,8 +41,4 @@ select:focus {
     border-radius: 10px;
     min-height: 20px;
     /* 👈 controls the thumb height */
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #a8a8a8;
 }

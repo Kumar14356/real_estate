@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { NAVBAR_LOGO } from '../../utils/constants';
+import logo from '/src/assets/logo-with-tag.svg';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -49,7 +49,7 @@ const handleLogin = async (e) => {
     <div className="flex h-screen ">
       {/* Left Section - Form */}
       <div className="w-full lg:w-1/2 flex justify-center flex-col px-8 lg:px-20">
-        <img src={NAVBAR_LOGO} alt="Rental Surat" className="w-32 " />
+        <img src={logo} alt="Rental Surat" className="w-32 " />
         <h2 className="text-lg text-gray-500">Welcome Back !!!</h2>
         <h1 className="text-3xl font-bold mb-8">Login</h1>
 

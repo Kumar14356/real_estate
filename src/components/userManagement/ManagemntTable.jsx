@@ -20,11 +20,11 @@ const ManagemntTable = () => {
   // Filter users safely
   const filteredUsers = Array.isArray(manageUser)
     ? manageUser.filter((user) => {
-        const name = user.full_name || "";
-        const status = user.status || "";
+        const name = user.username || "";
+        const status = user.isAdmin ? "active" : "inactive";
         const matchesName = name.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus =
-          statusFilter === "all" || status.toLowerCase() === statusFilter;
+          statusFilter === "all" || status === statusFilter.toLowerCase();
         return matchesName && matchesStatus;
       })
     : [];
@@ -43,21 +43,21 @@ const ManagemntTable = () => {
 
   return (
     <div className="px-2 sm:px-10">
-      <div className="overflow-x-auto rounded-2xl">
-        <table className="min-w-[1000px] w-full text-left text-xs sm:text-sm border-collapse bg-white table-auto">
-          <thead className="sticky top-0 bg-gray-100 z-10">
-            <tr className="border-b border-gray-300 h-15 font-semibold text-gray-700">
-              <th className="px-4">User Name</th>
-              <th className="px-4">Status</th>
-              <th className="px-4">Phone</th>
-              <th className="px-4">Email</th>
-              <th className="px-4">Role</th>
-              <th className="px-4">Actions</th>
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 no-scroll  ">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-900">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">User Name</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Status</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Phone</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Email</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Role</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
             {paginatedUsers.length === 0 ? (
-              <tr>
+              <tr className="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td colSpan="6" className="py-10 text-center">
                   <div className="flex flex-col items-center text-gray-500">
                     <img
@@ -74,17 +74,19 @@ const ManagemntTable = () => {
               </tr>
             ) : (
               paginatedUsers.map((user) => (
-                <tr key={user._id} className="border-b border-gray-200 hover:bg-gray-50 h-15">
-                  <td className="px-4 py-2 whitespace-nowrap">{user.username || "N/A"}</td>
-                  <td className="px-4 py-2">{user.status || "N/A"}</td>
-                  <td className="px-4 py-2">{user.phone_no || "N/A"}</td>
-                  <td className="px-4 py-2 truncate max-w-[200px]">{user.email_id || "N/A"}</td>
-                  <td className="px-4 py-2">{user.broker === "Yes" ? "Broker" : "User"}</td>
+                <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                  <td className="px-6 py-4 whitespace-nowrap">{user.username || "N/A"}</td>
+                  <td className="px-6 py-4">{user.isAdmin ? "Active" : "Inactive"}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{user.phone_no || "N/A"}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{user.email || "N/A"}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{user.broker === "Yes" ? "Broker" : "User"}</td>
                   <td
-                    className="px-4 py-2 text-xl text-black cursor-pointer hover:text-green-800"
-                    onClick={() => showUserInfo(user)}
+                    className="px-6 py-4 text-xl whitespace-nowrap"
+                    
                   >
+                    <button onClick={() => showUserInfo(user)} className="text-gray-500 hover:text-green-600 dark:hover:text-green-400 transition-colors">
                     <FaEye />
+                    </button>
                   </td>
                 </tr>
               ))
@@ -127,4 +129,4 @@ const ManagemntTable = () => {
   );
 };
 
-export default ManagemntTable;
+export default ManagemntTable; 

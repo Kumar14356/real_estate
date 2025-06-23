@@ -13,13 +13,13 @@ const DashBoard = () => {
   ];
 
   return (
-    <div className='w-full mt-30 px-8'>
-      <h1 className='font-bold text-3xl mb-8'>Dashboard</h1>
+    <div className='w-full pt-30 px-8 h-screen dark:bg-gray-800'>
+      <h1 className='font-bold text-3xl mb-8 dark:text-white'>Dashboard</h1>
 
       {/* Top Cards */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
         {/* Total Users */}
-        <div className='bg-blue-50 rounded-2xl shadow-lg p-4'>
+        <div className='bg-blue-50 rounded-2xl shadow-lg p-4 dark:bg-blue-900/20'>
           <div className='flex justify-between items-center mb-4'>
             <span className='text-2xl text-green-700 rounded-full bg-green-100 h-10 w-10 flex items-center justify-center'>
               <IoIosPeople />
@@ -27,13 +27,13 @@ const DashBoard = () => {
             <span className='text-green-700 font-semibold'>+12.5%</span>
           </div>
           <div className='flex justify-between items-center'>
-            <span className='text-gray-600'>Total Users</span>
-            <span className='font-bold text-lg'>93</span>
+            <span className='text-sm font-medium text-gray-500 mb-1'>Total Users</span>
+            <span className='text-2xl font-bold text-blue-800 dark:text-blue-300'>93</span>
           </div>
         </div>
 
         {/* Active Properties */}
-        <div className='bg-purple-50 rounded-2xl shadow-lg p-4'>
+        <div className='bg-purple-50 rounded-2xl shadow-lg p-4 dark:bg-green-900/20'>
           <div className='flex justify-between items-center mb-4'>
             <span className='text-2xl text-red-700 rounded-full bg-red-100 h-10 w-10 flex items-center justify-center'>
               <AiOutlineCalendar />
@@ -41,13 +41,13 @@ const DashBoard = () => {
             <span className='text-red-700 font-semibold'>-3.2%</span>
           </div>
           <div className='flex justify-between items-center'>
-            <span className='text-gray-600'>Active Properties</span>
-            <span className='font-bold text-lg'>154</span>
+            <span className='text-sm font-medium text-gray-500 mb-1'>Active Properties</span>
+            <span className='text-2xl font-bold text-purple-800 dark:text-green-300'>154</span>
           </div>
         </div>
 
         {/* Active Locations */}
-        <div className='bg-green-50 rounded-2xl shadow-lg p-4'>
+        <div className='bg-green-50 rounded-2xl shadow-lg p-4 dark:bg-purple-900/20'>
           <div className='flex justify-between items-center mb-4'>
             <span className='text-2xl text-green-700 rounded-full bg-green-100 h-10 w-10 flex items-center justify-center'>
               <FiAward />
@@ -55,8 +55,8 @@ const DashBoard = () => {
             <span className='text-green-700 font-semibold'>+8.7%</span>
           </div>
           <div className='flex justify-between items-center'>
-            <span className='text-gray-600'>Active Locations</span>
-            <span className='font-bold text-lg'>12</span>
+            <span className='text-sm font-medium text-gray-500 mb-1'>Active Locations</span>
+            <span className='text-2xl font-bold text-green-800 dark:text-blue-300'>12</span>
           </div>
         </div>
       </div>
@@ -64,7 +64,7 @@ const DashBoard = () => {
       {/* Charts Section */}
       <div className='flex flex-col lg:flex-row justify-between gap-6 mt-10'>
         {/* Line Chart */}
-        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5'>
+        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-900/20'>
           <h3 className='text-xl font-medium mb-4'>Registered Property</h3>
           <LineChart width={500} height={300} data={Bardata} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
             <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={3} />
@@ -76,7 +76,7 @@ const DashBoard = () => {
         </div>
 
         {/* Bar Chart */}
-        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5'>
+        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-600/20'>
           <h3 className='text-xl font-medium mb-4'>Property</h3>
           <BarChart width={500} height={300} data={Bardata} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} barSize={70}>
             <XAxis dataKey="name" scale="point" padding={{ left: 50, right: 20 }} />

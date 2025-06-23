@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import { NAVBAR_LOGO } from '../utils/constants';
+import logo from '/src/assets/logo-with-tag.svg';
 import { MdOutlineDashboard, MdLandscape, MdOutlinePersonAddAlt } from "react-icons/md";
 import { FaRegUserCircle } from "react-icons/fa";
 import { CiSliderHorizontal } from "react-icons/ci";
@@ -10,17 +10,21 @@ import { RxCross2 } from "react-icons/rx";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(window.innerWidth >= 1024);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleSidebar = () => setIsOpen(prev => !prev);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      const width = window.innerWidth;
+      setWindowWidth(width);
+      if (width >= 1024) {
         setIsOpen(true);
       } else {
         setIsOpen(false);
       }
     };
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -33,51 +37,50 @@ const Navbar = () => {
 
   return (
     <>
-      {/* Toggle button - mobile only */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <button onClick={toggleSidebar} className="text-3xl text-gray-700 bg-white p-2 rounded shadow">
+      {/* Toggle Button */}
+      <div className="lg:hidden fixed top-4 left-4 z-60">
+        <button onClick={toggleSidebar} className="text-3xl text-gray-700 dark:text-white bg-white dark:bg-gray-700 p-2 rounded shadow">
           {isOpen ? <RxCross2 /> : <GiHamburgerMenu />}
         </button>
       </div>
 
-      {/* Overlay for mobile */}
-      {isOpen && window.innerWidth < 1024 && (
-        <div 
-          className="fixed inset-0 bg-black opacity-30 z-30"
-          onClick={toggleSidebar}
-        />
+      {/* Mobile Overlay */}
+      {isOpen && windowWidth < 1024 && (
+        <div className="fixed inset-0 bg-black opacity-30 z-40" onClick={toggleSidebar} />
       )}
 
       {/* Sidebar */}
-      <nav className={`bg-white text-gray-900 h-full fixed top-0 left-0 z-40 transition-transform duration-300 ease-in-out 
-        ${isOpen ? 'translate-x-0 lg:w-70' : '-translate-x-full'} lg:translate-x-0 lg:static lg:h-screen w-20  shadow`}>
-
-        {/* Logo + Title */}
-        <div className='flex items-center justify-center lg:justify-between px-2 lg:px-6 py-6 border-b'>
-          <img className="w-10 lg:w-20" src={NAVBAR_LOGO} alt="logo" />
-          <h1 className='hidden lg:block text-lg font-bold'>Rental Surat</h1>
+      <nav
+        className={`w-20 fixed top-0 left-0 z-50 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white
+        min-h-screen transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
+         lg:w-62 lg:translate-x-0 lg:static shadow-2xl overflow-y-auto`}
+        aria-label='sidebar navigation'
+      >
+        {/* Logo */}
+        <div className='flex items-center justify-center lg:justify-between px-4 py-6 border-b dark:border-gray-600'>
+          <img className="w-15 lg:w-20" src={logo} alt="logo" />
+          <h1 className='hidden lg:block text-lg font-bold'>Real Estate</h1>
         </div>
 
-        {/* Sidebar links */}
+        {/* Sidebar Links */}
         <ul className="mt-6">
-          <SidebarItem to="/" icon={<MdOutlineDashboard />} label="Dashboard" />
-          <SidebarItem to="/usermanagement" icon={<FaRegUserCircle />} label="User Management" />
-          <SidebarItem to="/propertymanagement" icon={<MdLandscape />} label="Property Management" />
-          <SidebarItem to="/inactive-requext" icon={<MdOutlinePersonAddAlt />} label="Listing/Inactive Request" />
-          <SidebarItem to="/slide-manager" icon={<CiSliderHorizontal />} label="Slider Management" />
-          <SidebarItem to="/notification" icon={<IoIosNotifications />} label="Notification" />
-          <SidebarItem to="/settings" icon={<IoIosSettings />} label="Settings" />
+          <SidebarItem to="/" icon={<MdOutlineDashboard />} label="Dashboard" onClick={windowWidth < 1024 ? toggleSidebar : undefined} />
+          <SidebarItem to="/usermanagement" icon={<FaRegUserCircle />} label="User Management" onClick={windowWidth < 1024 ? toggleSidebar : undefined} />
+          <SidebarItem to="/propertymanagement" icon={<MdLandscape />} label="Property Management" onClick={windowWidth < 1024 ? toggleSidebar : undefined} />
+          <SidebarItem to="/inactive-requext" icon={<MdOutlinePersonAddAlt />} label="Listing/Inactive Request" onClick={windowWidth < 1024 ? toggleSidebar : undefined} />
+          <SidebarItem to="/slide-manager" icon={<CiSliderHorizontal />} label="Slider Management" onClick={windowWidth < 1024 ? toggleSidebar : undefined} />
+          <SidebarItem to="/notification" icon={<IoIosNotifications />} label="Notification" onClick={windowWidth < 1024 ? toggleSidebar : undefined} />
+          <SidebarItem to="/settings" icon={<IoIosSettings />} label="Settings" onClick={windowWidth < 1024 ? toggleSidebar : undefined} />
         </ul>
 
-        {/* Logout button */}
-        <div className="mt-25 lg:bottom-6 w-full px-4">
+        {/* Logout Button */}
+        <div className="mt-50 lg:mt-30 w-full px-4">
           <button
             onClick={handleLogout}
             className="flex items-center gap-4 px-3 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white w-full"
           >
-            <span className="text-2xl">
-              <RxCross2 />
-            </span>
+            <span className="text-2xl"><RxCross2 /></span>
             <span className="hidden lg:inline font-semibold">Logout</span>
           </button>
         </div>
@@ -86,15 +89,16 @@ const Navbar = () => {
   );
 };
 
-// Sidebar Item component
-const SidebarItem = ({ to, icon, label }) => {
+const SidebarItem = ({ to, icon, label, onClick }) => {
   return (
     <li>
       <NavLink
         to={to}
+        onClick={onClick}
         className={({ isActive }) =>
-          `flex items-center gap-4 px-3 py-3 m-3 mx-2 rounded-xl hover:bg-yellow-500 
-          ${isActive ? 'text-green-50 font-semibold bg-green-800' : 'text-gray-800'}`
+          `flex items-center gap-4 px-3 py-3 m-3 mx-2 rounded-xl transition 
+          hover:bg-yellow-500 dark:hover:bg-yellow-600 
+          ${isActive ? 'text-white font-semibold bg-green-800' : 'text-gray-800 dark:text-gray-100'}`
         }
       >
         <span className="text-2xl">{icon}</span>

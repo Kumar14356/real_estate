@@ -16,7 +16,6 @@ import Navbar from './components/Navbar';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// 🔐 PrivateRoute wrapper
 const PrivateRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/login" replace />;
@@ -41,10 +40,9 @@ function App() {
 
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <div className="flex-1">
+      <div className="app flex-1">
         <Routes>
           <Route path="/login" element={<Login />} />
-
           <Route path="/" element={<PrivateRoute><DashBoard /></PrivateRoute>} />
           <Route path="/usermanagement" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
           <Route path="/propertymanagement" element={<PrivateRoute><PropertyManagementPage /></PrivateRoute>} />

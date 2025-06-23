@@ -11,15 +11,9 @@ const useUserManagement = () => {
 
   const getUserProfile = async () => {
     try {
-      const response = await fetch('https://realstate-2.onrender.com/api/v1/user/', {
-        method: 'GET',
-      });
-
+      const response = await fetch('https://realstate-2.onrender.com/api/v1/user/');
       const json = await response.json();
-
-      
-
-      dispatch(addUserManagement(json.data));
+      dispatch(addUserManagement(json.data)); // assuming response.data contains user array
     } catch (err) {
       console.error("Failed to fetch user data:", err);
     }

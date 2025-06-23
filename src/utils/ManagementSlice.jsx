@@ -3,10 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 const ManagementSlice = createSlice({
   name: "ManageUser",
   initialState: {
-    userProfile: null,
+    userProfile: [],
     searchQuery: '',
-    statusFilter: 'all', 
-    userInformation: null
+    statusFilter: 'all',
+    userInformation: null,
   },
   reducers: {
     addUserManagement: (state, action) => {
@@ -18,9 +18,21 @@ const ManagementSlice = createSlice({
     setSearchQuery: (state, action) => {
       state.searchQuery = action.payload;
     },
-    setStatusFilter: (state, action) => { 
+    setStatusFilter: (state, action) => {
       state.statusFilter = action.payload;
-    }
+    },
+    updateUserStatus: (state, action) => {
+      const { userId, isAdmin } = action.payload;
+      const user = state.userProfile.find(user => user._id === userId);
+      if (user) {
+        user.isAdmin = isAdmin;
+      }
+
+      // Also update userInformation if currently selected
+      if (state.userInformation && state.userInformation._id === userId) {
+        state.userInformation.isAdmin = isAdmin;
+      }
+    },
   },
 });
 
@@ -28,7 +40,8 @@ export const {
   addUserManagement,
   showuserInformation,
   setSearchQuery,
-  setStatusFilter, // ✅ Export new reducer
+  setStatusFilter,
+  updateUserStatus, // ✅ Ensure this is exported
 } = ManagementSlice.actions;
 
 export default ManagementSlice.reducer;
