@@ -7,6 +7,9 @@ export const deleteProject = createAsyncThunk(
     try {
       const response = await fetch(`https://realstate-2.onrender.com/api/v1/project/${projectId}`, {
         method: "DELETE",
+        headers: {
+        'Content-Type': 'application/json',
+      },
       });
 
       const data = await response.json();

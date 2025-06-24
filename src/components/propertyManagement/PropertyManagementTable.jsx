@@ -75,27 +75,27 @@ const PropertyManagementTable = () => {
   };
 
   return (
-    <div className="">
-      <div className="my-10 overflow-x-auto rounded-2xl mx-10">
-        <table className="min-w-full shadow">
-          <thead className="bg-gray-50 dark:bg-gray-700">
+    <div className="px-2 sm:px-10">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 no-scroll ">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
-              <th className="text-left py-3 px-6">Project Name</th>
-              <th className="text-left py-3 px-4">Status</th>
-              <th className="text-left py-3 px-4">Location</th>
-              <th className="text-left py-3 px-4">Built-up Area</th>
-              <th className="text-left py-3 px-4">Super Built-up Area</th>
-              <th className="text-left py-3 px-4">Furnishing</th>
-              <th className="text-left py-3 px-4">Actions</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Project Name</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Status</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Location</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Built-up Area</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Super Built-up Area</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Furnishing</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Actions</th>
             </tr>
           </thead>
 
           <tbody>
             {localData.map(property => (
-              <tr key={property._id} className="bg-white border-b dark:border-gray-700">
-                <td className="px-6 py-4 text-sm font-medium">{property.projectname}</td>
+              <tr key={property._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
 
-                <td className="px-4 py-4">
+                <td className="px-6 py-4">
                   <select
                     value={property.status ? "Active" : "Inactive"}
                     onChange={(e) => updateStatus(property._id, e.target.value)}
@@ -107,10 +107,10 @@ const PropertyManagementTable = () => {
                   </select>
                 </td>
 
-                <td className="px-4 py-4 text-sm">{property.city}</td>
-                <td className="px-4 py-4 text-sm">1200 Sq.ft</td>
-                <td className="px-4 py-4 text-sm">1800 Sq.ft</td>
-                <td className="px-4 py-4 text-sm">Unfurnished</td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.city}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">1200 Sq.ft</td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">1800 Sq.ft</td>
+                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">Unfurnished</td>
 
                 <td className="px-6 py-4 text-center">
                   <div className="flex space-x-3">

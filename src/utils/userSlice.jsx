@@ -4,7 +4,7 @@ const gptSlice = createSlice({
   name: "user",
   initialState: {
     showUserInfo: false,
-    isOpen: true,
+    isOpen: false,
   },
   reducers: {
     toogleUserInfo: (state) => {

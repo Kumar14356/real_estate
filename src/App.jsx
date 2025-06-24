@@ -36,10 +36,9 @@ function App() {
 
   return (
     <div className="flex">
-      {isAuthenticated && <Navbar />}
+      {isAuthenticated && location.pathname !== '/login' && <Navbar />}
 
       <ToastContainer position="top-right" autoClose={3000} />
-
       <div className="app flex-1">
         <Routes>
           <Route path="/login" element={<Login />} />

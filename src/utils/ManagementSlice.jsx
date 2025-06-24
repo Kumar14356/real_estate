@@ -22,15 +22,13 @@ const ManagementSlice = createSlice({
       state.statusFilter = action.payload;
     },
     updateUserStatus: (state, action) => {
-      const { userId, isAdmin } = action.payload;
+      const { userId, isActive } = action.payload;
       const user = state.userProfile.find(user => user._id === userId);
       if (user) {
-        user.isAdmin = isAdmin;
+        user.isActive = isActive;
       }
-
-      // Also update userInformation if currently selected
       if (state.userInformation && state.userInformation._id === userId) {
-        state.userInformation.isAdmin = isAdmin;
+        state.userInformation.isActive = isActive;
       }
     },
   },
@@ -41,7 +39,7 @@ export const {
   showuserInformation,
   setSearchQuery,
   setStatusFilter,
-  updateUserStatus, // ✅ Ensure this is exported
+  updateUserStatus,
 } = ManagementSlice.actions;
 
 export default ManagementSlice.reducer;

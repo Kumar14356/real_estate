@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { toogleUserInfo } from "../../utils/userSlice";
 import useUserManagemnt from "../../Hoocks/useUserManagemnt";
 import { showuserInformation } from "../../utils/ManagementSlice";
+  
+
 
 const USERS_PER_PAGE = 7;
 
@@ -21,7 +23,7 @@ const ManagemntTable = () => {
   const filteredUsers = Array.isArray(manageUser)
     ? manageUser.filter((user) => {
         const name = user.username || "";
-        const status = user.isAdmin ? "active" : "inactive";
+        const status = user.isActive ? "active" : "inactive";
         const matchesName = name.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesStatus =
           statusFilter === "all" || status === statusFilter.toLowerCase();
@@ -76,7 +78,7 @@ const ManagemntTable = () => {
               paginatedUsers.map((user) => (
                 <tr key={user._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                   <td className="px-6 py-4 whitespace-nowrap">{user.username || "N/A"}</td>
-                  <td className="px-6 py-4">{user.isAdmin ? "Active" : "Inactive"}</td>
+                  <td className="px-6 py-4">{user.isActive ? "Active" : "Inactive"}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{user.phone_no || "N/A"}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{user.email || "N/A"}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{user.broker === "Yes" ? "Broker" : "User"}</td>
