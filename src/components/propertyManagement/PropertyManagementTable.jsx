@@ -41,7 +41,11 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
         )
       );
 
-      toast.success(`Project status updated to ${newStatus ? 'Active' : 'Inactive'}`);
+      if (newStatus) {
+        toast.success("Property is now Active and visible to users.");
+      } else {
+        toast.warning("Property is now Inactive and hidden from users.");
+      }
     } catch (error) {
       toast.error(error + " Failed to update status.");
     } finally {
@@ -113,8 +117,14 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
         <tbody>
           {currentData.length === 0 ? (
             <tr>
-              <td colSpan="7" className="text-center py-4 text-gray-500 dark:text-gray-400">
-                No properties found.
+              <td colSpan="7" className="py-10 text-center">
+                <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 9.75h.008v.008H9.75V9.75zM3 17.25l5.25-5.25M12 3v1.5M21 12h-1.5M4.5 12H3m9 9v-1.5M17.25 3l-5.25 5.25M21 4.5l-5.25 5.25M3 4.5l5.25 5.25" />
+                  </svg>
+                  <p className="text-lg font-semibold">No Properties Found</p>
+                  <p className="text-sm mt-1">Try adjusting your filters or search query.</p>
+                </div>
               </td>
             </tr>
           ) : (
@@ -173,11 +183,10 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
             <button
               key={num}
               onClick={() => setCurrentPage(num + 1)}
-              className={`px-3 py-1 rounded ${
-                currentPage === num + 1
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
-              } hover:bg-gray-300 dark:hover:bg-gray-600`}
+              className={`px-3 py-1 rounded ${currentPage === num + 1
+                ? 'bg-green-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+                } hover:bg-gray-300 dark:hover:bg-gray-600`}
             >
               {num + 1}
             </button>

@@ -9,6 +9,7 @@ import { IoIosNotifications, IoIosSettings } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
@@ -36,6 +37,8 @@ const navigate = useNavigate();
   const handleLogout = () => {
   localStorage.removeItem('token');
   navigate('/login'); // from useNavigate()
+  toast.success("Goodbye for now. Stay safe and productive!")
+
 };
 
   return (

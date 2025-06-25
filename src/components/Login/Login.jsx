@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import logo from '/src/assets/logo-with-tag.svg';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +34,7 @@ const handleLogin = async (e) => {
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('token', data.token);
       navigate('/');
+      toast.success("Boom! You’re logged in and ready to roll.")
     } else {
       setError(data?.message || 'Invalid email or password');
     }

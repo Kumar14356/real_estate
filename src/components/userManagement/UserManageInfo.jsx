@@ -7,6 +7,7 @@ import { IoMdAdd } from "react-icons/io";
 import ToggleButton from '../ToggleButton';
 import { toogleUserInfo } from '../../utils/userSlice';
 import { updateUserStatus } from '../../utils/ManagementSlice';
+import { toast } from 'react-toastify';
 
 const UserManageInfo = () => {
   const dispatch = useDispatch();
@@ -34,13 +35,18 @@ const UserManageInfo = () => {
     });
 
     if (!response.ok) throw new Error('Failed to update user status');
-
-    const result = await response.json();
-    console.log('User status updated:', result);
-
+    
+    
+if (newStatus) {
+  toast.success("User is now Active and ready to go!");
+} else {
+  toast.warning("User is Inactive. Peace and quiet for now!");
+}
+ 
     dispatch(updateUserStatus({ userId: manageUser._id, isActive: newStatus }));
   } catch (error) {
     console.error('Error updating status:', error.message);
+    toast.error('Error updating status:', error.message)
   }
 };
 
@@ -79,7 +85,7 @@ const UserManageInfo = () => {
                 <IoIosPeople />
                 <span className=" text-sm px-2 text-gray-800 dark:text-gray-200 ">Role</span>
               </div>
-              <h3 className="text-black font-medium text-xl py-2">
+              <h3 className="text-black font-medium text-xl py-2 dark:text-gray-200">
                 {manageUser?.broker === "Yes" ? "Broker" : "User"}
               </h3>
             </div>
