@@ -13,7 +13,7 @@ const Notification = () => {
   const [search, setSearch] = useState("");
 
   const filteredUsers = userProfiles.filter((user) => {
-    const fullName = `${user.firstName || ""} ${user.lastName || ""}`.toLowerCase();
+    const fullName = `${user.username || ""}`.toLowerCase();
     return fullName.includes(search.toLowerCase());
   });
 
@@ -67,21 +67,21 @@ const Notification = () => {
 
   return (
     <div className="flex h-screen">
-      <main className="flex-1 p-6 bg-gray-200 overflow-auto">
-        <h1 className="text-2xl font-bold mb-6">Notification Center</h1>
+      <main className="flex-1 p-6 bg-gray-200 overflow-auto dark:bg-gray-900  dark:text-gray-200">
+        <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">Notification Center</h1>
 
         <div className="mb-4 flex space-x-2">
           <button className="bg-blue-600 text-white px-6 py-4 rounded-2xl">
             Create Notification
           </button>
-          <button className="bg-gray-200 px-4 py-2 rounded">
+          <button className="bg-gray-200 px-4 py-2 rounded dark:bg-gray-800 text-gray-200">
             Notification History
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6 dark:bg-gray-800 px-3">
           {/* Left: Notification Form */}
-          <div className="bg-white rounded-xl p-6 shadow-lg h-[550px]">
+          <div className="bg-white rounded-xl p-6 shadow-lg h-[550px] dark:bg-gray-700">
             <h2 className="text-lg font-medium mb-4">Create Notification</h2>
             <div className="space-y-6">
               <input
@@ -107,7 +107,7 @@ const Notification = () => {
           </div>
 
           {/* Right: Recipient List */}
-          <div className="bg-white rounded-xl p-4 shadow-lg h-[550px]">
+          <div className="bg-white rounded-xl p-4 shadow-lg h-[550px] dark:bg-gray-700">
             <h2 className="text-lg font-medium mb-4">Select Recipient</h2>
             <input
               type="text"
@@ -124,7 +124,7 @@ const Notification = () => {
                 Deselect All
               </button>
             </div>
-            <div className="h-80 overflow-y-scroll border border-gray-200 rounded p-2 bg-gray-50">
+            <div className="h-80 overflow-y-scroll border border-gray-200 rounded p-2 bg-gray-50 dark:bg-gray-700">
               {filteredUsers.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-gray-500">
                   <img

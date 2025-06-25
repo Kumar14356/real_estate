@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addtoggleInformation, deleteProject } from '../../utils/PropertyManagementSlice';
 
-const PropertyManagementTable = () => {
+const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) => {
   const dispatch = useDispatch();
   const propertyInformation = useSelector(store => store.PropertyInfo.propertyInformation);
-  usePropertyManagement(); // Load data on mount
+  usePropertyManagement();
 
   const [localData, setLocalData] = useState([]);
-  const [loadingId, setLoadingId] = useState(null); // ID currently being updated
+  const [loadingId, setLoadingId] = useState(null);
 
   useEffect(() => {
     if (Array.isArray(propertyInformation)) {
@@ -27,17 +27,11 @@ const PropertyManagementTable = () => {
     try {
       const response = await fetch(`https://realstate-2.onrender.com/api/v1/project/${id}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
 
-      const responseText = await response.text();
-      if (!response.ok) {
-        throw new Error(`Failed: ${response.status} - ${responseText}`);
-      }
-
+      if (!response.ok) throw new Error("Update failed");
 
       setLocalData(prev =>
         prev.map(item =>
@@ -47,8 +41,7 @@ const PropertyManagementTable = () => {
 
       toast.success(`Project status updated to ${newStatus ? 'Active' : 'Inactive'}`);
     } catch (error) {
-      console.error('Error updating status:', error.message);
-      toast.error("Failed to update status.");
+      toast.error(error + "Failed to update status.");
     } finally {
       setLoadingId(null);
     }
@@ -65,36 +58,48 @@ const PropertyManagementTable = () => {
     try {
       await dispatch(deleteProject(id)).unwrap();
       toast.success("Project deleted successfully");
-
-      // Remove deleted item from local state
       setLocalData(prev => prev.filter(item => item._id !== id));
-    } catch (error) {
-      console.error('Delete error:', error);
+    } catch {
       toast.error("Failed to delete project");
     }
   };
 
+  // Filtering
+  const filteredData = localData.filter(item => {
+    const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === 'all' ||
+      (statusFilter === 'Active' && item.status === true) ||
+      (statusFilter === 'Inactive' && item.status === false) ||
+      (item.statusType?.toLowerCase() === statusFilter.toLowerCase());
+
+    const matchesPostedBy =
+      postedByFilter === 'all' ||
+      item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
+
+    return matchesSearch && matchesStatus && matchesPostedBy;
+  });
+
   return (
     <div className="px-2 sm:px-10">
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 no-scroll ">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Project Name</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Status</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Location</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Built-up Area</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Super Built-up Area</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Furnishing</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400 cursor-pointer hover:text-green-600 dark:hover-green-400">Actions</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Project Name</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Status</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Location</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Built-up Area</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Super Built-up Area</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Furnishing</th>
+              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
             </tr>
           </thead>
-
           <tbody>
-            {localData.map(property => (
+            {filteredData.map(property => (
               <tr key={property._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                 <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
-
                 <td className="px-6 py-4">
                   <select
                     value={property.status ? "Active" : "Inactive"}
@@ -106,24 +111,16 @@ const PropertyManagementTable = () => {
                     <option value="Inactive">Inactive</option>
                   </select>
                 </td>
-
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.city}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">1200 Sq.ft</td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">1800 Sq.ft</td>
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">Unfurnished</td>
-
+                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">{property.city}</td>
+                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">1200 Sq.ft</td>
+                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">1800 Sq.ft</td>
+                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">Unfurnished</td>
                 <td className="px-6 py-4 text-center">
                   <div className="flex space-x-3">
-                    <button
-                      className="text-green-500 text-2xl cursor-pointer"
-                      onClick={handlePropertInfo}
-                    >
+                    <button className="text-green-500 text-2xl" onClick={()=>handlePropertInfo(property)}>
                       <FaEye />
                     </button>
-                    <button
-                      className="text-red-500 text-2xl cursor-pointer"
-                      onClick={() => handleDelete(property._id)}
-                    >
+                    <button className="text-red-500 text-2xl" onClick={() => handleDelete(property._id)}>
                       <RiDeleteBin5Line />
                     </button>
                   </div>
@@ -131,7 +128,6 @@ const PropertyManagementTable = () => {
               </tr>
             ))}
           </tbody>
-
         </table>
       </div>
     </div>

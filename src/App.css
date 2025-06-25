@@ -4,6 +4,10 @@ body {
     background-color: rgb(236, 234, 234);
 }
 
+.dark body {
+    background-color: darkblue;
+}
+
 nav ul li .active {
     background-color: rgb(50, 83, 1) !important;
     color: white;

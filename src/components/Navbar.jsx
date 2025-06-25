@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import darkLogo from '/src/assets/darkModeLogo.png';
 import logo from '/src/assets/logo-with-tag.svg';
 import { MdOutlineDashboard, MdLandscape, MdOutlinePersonAddAlt } from "react-icons/md";
@@ -16,8 +16,9 @@ const Navbar = () => {
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
   const toggleSidebar = () => setIsOpen(prev => !prev);
-
+const navigate = useNavigate();
   useEffect(() => {
+    
     const handleResize = () => {
       const width = window.innerWidth;
       setWindowWidth(width);
@@ -33,10 +34,9 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/login';
-  };
+  localStorage.removeItem('token');
+  navigate('/login'); // from useNavigate()
+};
 
   return (
     <>
@@ -63,7 +63,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className='flex items-center justify-center lg:justify-between px-4 py-6 border-b dark:border-gray-600'>
           <img
-            className="w-15 lg:w-20 dark:lg:h-30 dark:lg:w-30"
+            className="w-15 lg:w-20 dark:lg:w-20"
             src={darkMode ? darkLogo : logo}
             alt="logo"
           />

@@ -13,7 +13,7 @@ const DashBoard = () => {
   ];
 
   return (
-    <div className='w-full pt-30 px-8 h-screen dark:bg-gray-800'>
+    <div className='w-full pt-30 px-8 h-full dark:bg-gray-800'>
       <h1 className='font-bold text-3xl mb-8 dark:text-white'>Dashboard</h1>
 
       {/* Top Cards */}
