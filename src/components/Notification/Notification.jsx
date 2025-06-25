@@ -67,7 +67,7 @@ const Notification = () => {
 
   return (
     <div className="flex h-screen">
-      <main className="flex-1 p-6 bg-gray-200 overflow-auto dark:bg-gray-900  dark:text-gray-200">
+      <main className="flex-1 p-6 bg-gray-200 overflow-auto dark:bg-gray-900  dark:text-gray-200 pt-10">
         <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-200">Notification Center</h1>
 
         <div className="mb-4 flex space-x-2">

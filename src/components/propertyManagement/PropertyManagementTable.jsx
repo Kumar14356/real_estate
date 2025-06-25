@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { FaEye } from "react-icons/fa";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import usePropertyManagement from '../../Hoocks/usePropertyManagement';
@@ -13,6 +13,8 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
 
   const [localData, setLocalData] = useState([]);
   const [loadingId, setLoadingId] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 8;
 
   useEffect(() => {
     if (Array.isArray(propertyInformation)) {
@@ -47,8 +49,8 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
     }
   };
 
-  const handlePropertInfo = () => {
-    dispatch(addtoggleInformation());
+  const handlePropertInfo = (property) => {
+    dispatch(addtoggleInformation(property));
   };
 
   const handleDelete = async (id) => {
@@ -64,21 +66,35 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
     }
   };
 
-  const filteredData = localData.filter(item => {
-    const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
+  // Filtered + Paginated Data
+  const filteredData = useMemo(() => {
+    return localData.filter(item => {
+      const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === 'all' ||
-      (statusFilter === 'Active' && item.status === true) ||
-      (statusFilter === 'Inactive' && item.status === false) ||
-      (item.statusType?.toLowerCase() === statusFilter.toLowerCase());
+      const matchesStatus = (() => {
+        const status = statusFilter.toLowerCase();
+        if (status === 'all') return true;
+        if (status === 'active') return item.status === true;
+        if (status === 'inactive') return item.status === false;
+        return item.statusType?.toLowerCase() === status;
+      })();
 
-    const matchesPostedBy =
-      postedByFilter === 'all' ||
-      item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
+      const matchesPostedBy =
+        postedByFilter === 'all' ||
+        item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
 
-    return matchesSearch && matchesStatus && matchesPostedBy;
-  });
+      return matchesSearch && matchesStatus && matchesPostedBy;
+    });
+  }, [localData, searchQuery, statusFilter, postedByFilter]);
+
+  const indexOfLast = currentPage * rowsPerPage;
+  const indexOfFirst = indexOfLast - rowsPerPage;
+  const currentData = filteredData.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset page to 1 on filters/search change
+  }, [searchQuery, statusFilter, postedByFilter]);
 
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
@@ -95,38 +111,87 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
           </tr>
         </thead>
         <tbody>
-          {filteredData.map(property => (
-            <tr key={property._id} className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-              <td className="px-4 py-3 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
-              <td className="px-4 py-3">
-                <select
-                  value={property.status ? "Active" : "Inactive"}
-                  onChange={(e) => updateStatus(property._id, e.target.value)}
-                  disabled={loadingId === property._id}
-                  className="border rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-white text-sm"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </td>
-              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{property.city}</td>
-              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">1200 Sq.ft</td>
-              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">1800 Sq.ft</td>
-              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">Unfurnished</td>
-              <td className="px-4 py-3 text-center">
-                <div className="flex justify-center items-center gap-3">
-                  <button className="text-green-500 text-xl" onClick={() => handlePropertInfo(property)}>
-                    <FaEye />
-                  </button>
-                  <button className="text-red-500 text-xl" onClick={() => handleDelete(property._id)}>
-                    <RiDeleteBin5Line />
-                  </button>
-                </div>
+          {currentData.length === 0 ? (
+            <tr>
+              <td colSpan="7" className="text-center py-4 text-gray-500 dark:text-gray-400">
+                No properties found.
               </td>
             </tr>
-          ))}
+          ) : (
+            currentData.map(property => (
+              <tr key={property._id} className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                <td className="px-4 py-3 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
+                <td className="px-4 py-3">
+                  <select
+                    value={property.status ? "Active" : "Inactive"}
+                    onChange={(e) => updateStatus(property._id, e.target.value)}
+                    disabled={loadingId === property._id}
+                    className="border rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-white text-sm"
+                  >
+                    {loadingId === property._id ? (
+                      <option>Updating...</option>
+                    ) : (
+                      <>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                      </>
+                    )}
+                  </select>
+                </td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{property.city}</td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{property.builtupArea || '1200 Sq.ft'}</td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{property.superBuiltup || '1800 Sq.ft'}</td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{property.furnishing || 'Unfurnished'}</td>
+                <td className="px-4 py-3 text-center">
+                  <div className="flex justify-center items-center gap-3">
+                    <button className="text-green-500 text-xl hover:text-green-600 transition" onClick={() => handlePropertInfo(property)}>
+                      <FaEye />
+                    </button>
+                    <button className="text-red-500 text-xl hover:text-red-600 transition" onClick={() => handleDelete(property._id)}>
+                      <RiDeleteBin5Line />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      {filteredData.length > rowsPerPage && (
+        <div className="flex justify-center items-center gap-2 p-4">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          {[...Array(totalPages).keys()].map(num => (
+            <button
+              key={num}
+              onClick={() => setCurrentPage(num + 1)}
+              className={`px-3 py-1 rounded ${
+                currentPage === num + 1
+                  ? 'bg-green-500 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
+              } hover:bg-gray-300 dark:hover:bg-gray-600`}
+            >
+              {num + 1}
+            </button>
+          ))}
+
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };

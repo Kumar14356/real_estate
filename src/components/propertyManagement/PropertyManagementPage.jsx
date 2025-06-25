@@ -10,7 +10,7 @@ const PropertyManagement = () => {
   const [postedByFilter, setPostedByFilter] = useState('all');
 
   return (
-    <div className='min-h-screen py-10 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'>
+    <div className='min-h-screen pt-18 px-4 bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-gray-100'>
       <div className='mb-8'>
         <h1 className='text-2xl md:text-3xl font-bold'>Property Management</h1>
       </div>

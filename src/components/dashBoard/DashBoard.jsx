@@ -73,7 +73,7 @@ const DashBoard = () => {
       </div>
 
       {/* Charts Section */}
-      <div className='flex flex-col lg:flex-row justify-between gap-6 mt-10 w-full'>
+      <div className='flex flex-col lg:flex-row justify-between gap-6 mt-10 w-full h-auto'>
         {/* Line Chart */}
         <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-900/20 h-[400px]'>
           <h3 className='text-xl font-medium mb-4 dark:text-gray-200 text-gray-800'>Registered Property</h3>
