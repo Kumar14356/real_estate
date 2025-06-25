@@ -12,6 +12,7 @@ import Notification from './components/Notification/Notification';
 import Settings from './components/Settings/Settings';
 import Login from './components/Login/Login';
 import Navbar from './components/Navbar';
+import Error404 from './components/Error/Error404';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,9 +35,24 @@ function App() {
     setIsAuthenticated(!!localStorage.getItem('token'));
   }, [location]);
 
+  // Define all valid routes
+  const validRoutes = [
+    '/',
+    '/login',
+    '/usermanagement',
+    '/propertymanagement',
+    '/inactive-requext',
+    '/slide-manager',
+    '/notification',
+    '/settings'
+  ];
+
+  const isValidRoute = validRoutes.includes(location.pathname);
+  const shouldShowNavbar = isAuthenticated && location.pathname !== '/login' && isValidRoute;
+
   return (
     <div className="flex">
-      {isAuthenticated && location.pathname !== '/login' && <Navbar />}
+      {shouldShowNavbar && <Navbar />}
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="app flex-1">
         <Routes>
@@ -48,6 +64,7 @@ function App() {
           <Route path="/slide-manager" element={<PrivateRoute><SlideManager /></PrivateRoute>} />
           <Route path="/notification" element={<PrivateRoute><Notification /></PrivateRoute>} />
           <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+          <Route path="*" element={<Error404 />} />
         </Routes>
       </div>
     </div>
@@ -55,3 +72,12 @@ function App() {
 }
 
 export default App;
+
+
+
+
+
+
+
+
+

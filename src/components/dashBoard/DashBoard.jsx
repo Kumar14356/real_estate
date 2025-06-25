@@ -77,7 +77,7 @@ const DashBoard = () => {
         {/* Line Chart */}
         <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-900/20 h-[400px]'>
           <h3 className='text-xl font-medium mb-4 dark:text-gray-200 text-gray-800'>Registered Property</h3>
-          <ResponsiveContainer width="100%" height="80%">
+          <ResponsiveContainer width="100%" height="90%">
             <LineChart data={Bardata}>
               <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={3} />
               <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
@@ -91,14 +91,14 @@ const DashBoard = () => {
         {/* Bar Chart */}
         <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-600/20 h-[400px]'>
           <h3 className='text-xl font-medium mb-4 dark:text-gray-200 text-gray-800'>Property</h3>
-          <ResponsiveContainer width="100%" height="80%">
+          <ResponsiveContainer width="100%" height="90%">
             <BarChart data={Bardata}>
-              <XAxis dataKey="name" scale="point" padding={{ left: 50, right: 30 }} />
+              <XAxis dataKey="name" scale="point" padding={{ left: 50, right: 40 }} />
               <YAxis />
               <Tooltip />
               <Legend />
               <CartesianGrid strokeDasharray="3 3" />
-              <Bar dataKey="pv" fill="#84d88b" background={{ fill: "#eee" }} />
+              <Bar dataKey="pv" fill="#84d88b"barSize={90} background={{ fill: "#eee" }} />
             </BarChart>
           </ResponsiveContainer>
         </div>
