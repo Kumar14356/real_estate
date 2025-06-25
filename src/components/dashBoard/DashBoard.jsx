@@ -2,7 +2,18 @@ import React from 'react';
 import { IoIosPeople } from "react-icons/io";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { FiAward } from "react-icons/fi";
-import { BarChart, Bar, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
 
 const DashBoard = () => {
   const Bardata = [
@@ -13,11 +24,11 @@ const DashBoard = () => {
   ];
 
   return (
-    <div className='w-full pt-30 px-8 h-full dark:bg-gray-800'>
+    <div className='w-full px-3 pt-20 pb-10 h-full dark:bg-gray-800'>
       <h1 className='font-bold text-3xl mb-8 dark:text-white'>Dashboard</h1>
 
       {/* Top Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-5'>
         {/* Total Users */}
         <div className='bg-blue-50 rounded-2xl shadow-lg p-4 dark:bg-blue-900/20'>
           <div className='flex justify-between items-center mb-4'>
@@ -33,7 +44,7 @@ const DashBoard = () => {
         </div>
 
         {/* Active Properties */}
-        <div className='bg-purple-50 rounded-2xl shadow-lg p-4 dark:bg-green-900/20'>
+        <div className='bg-purple-50 rounded-2xl shadow-lg p-4 dark:bg-green-900/20 '>
           <div className='flex justify-between items-center mb-4'>
             <span className='text-2xl text-red-700 rounded-full bg-red-100 h-10 w-10 flex items-center justify-center'>
               <AiOutlineCalendar />
@@ -62,30 +73,34 @@ const DashBoard = () => {
       </div>
 
       {/* Charts Section */}
-      <div className='flex flex-col lg:flex-row justify-between gap-6 mt-10'>
+      <div className='flex flex-col lg:flex-row justify-between gap-6 mt-10 w-full'>
         {/* Line Chart */}
-        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-900/20'>
-          <h3 className='text-xl font-medium mb-4'>Registered Property</h3>
-          <LineChart width={500} height={300} data={Bardata} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
-            <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={3} />
-            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-          </LineChart>
+        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-900/20 h-[400px]'>
+          <h3 className='text-xl font-medium mb-4 dark:text-gray-200 text-gray-800'>Registered Property</h3>
+          <ResponsiveContainer width="100%" height="80%">
+            <LineChart data={Bardata}>
+              <Line type="monotone" dataKey="uv" stroke="#8884d8" strokeWidth={3} />
+              <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
 
         {/* Bar Chart */}
-        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-600/20'>
-          <h3 className='text-xl font-medium mb-4'>Property</h3>
-          <BarChart width={500} height={300} data={Bardata} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} barSize={70}>
-            <XAxis dataKey="name" scale="point" padding={{ left: 50, right: 20 }} />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <CartesianGrid strokeDasharray="3 3" />
-            <Bar dataKey="pv" fill="#84d88b" background={{ fill: "#eee" }} />
-          </BarChart>
+        <div className='flex-1 bg-white rounded-2xl shadow-lg p-5 dark:bg-green-600/20 h-[400px]'>
+          <h3 className='text-xl font-medium mb-4 dark:text-gray-200 text-gray-800'>Property</h3>
+          <ResponsiveContainer width="100%" height="80%">
+            <BarChart data={Bardata}>
+              <XAxis dataKey="name" scale="point" padding={{ left: 50, right: 30 }} />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <CartesianGrid strokeDasharray="3 3" />
+              <Bar dataKey="pv" fill="#84d88b" background={{ fill: "#eee" }} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>

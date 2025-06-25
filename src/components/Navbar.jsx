@@ -109,7 +109,7 @@ const SidebarItem = ({ to, icon, label, onClick }) => {
         }
       >
         <span className="text-2xl">{icon}</span>
-        <span className="hidden lg:inline font-semibold">{label}</span>
+        <span className="hidden lg:inline-block font-semibold">{label}</span>
       </NavLink>
     </li>
   );

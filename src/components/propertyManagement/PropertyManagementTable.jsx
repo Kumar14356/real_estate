@@ -41,7 +41,7 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
 
       toast.success(`Project status updated to ${newStatus ? 'Active' : 'Inactive'}`);
     } catch (error) {
-      toast.error(error + "Failed to update status.");
+      toast.error(error + " Failed to update status.");
     } finally {
       setLoadingId(null);
     }
@@ -64,7 +64,6 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
     }
   };
 
-  // Filtering
   const filteredData = localData.filter(item => {
     const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -82,54 +81,52 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
   });
 
   return (
-    <div className="px-2 sm:px-10">
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead className="bg-gray-50 dark:bg-gray-900">
-            <tr>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Project Name</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Status</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Location</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Built-up Area</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Super Built-up Area</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Furnishing</th>
-              <th className="px-6 py-3 text-left text-sm font-medium text-gray-500">Actions</th>
+    <div className="w-full overflow-x-auto rounded-lg shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 text-sm">
+        <thead className="bg-gray-50 dark:bg-gray-900">
+          <tr>
+            <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">Project Name</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">Status</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">Location</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">Built-up Area</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">Super Built-up</th>
+            <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-300">Furnishing</th>
+            <th className="px-4 py-3 text-center font-semibold text-gray-600 dark:text-gray-300">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredData.map(property => (
+            <tr key={property._id} className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+              <td className="px-4 py-3 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
+              <td className="px-4 py-3">
+                <select
+                  value={property.status ? "Active" : "Inactive"}
+                  onChange={(e) => updateStatus(property._id, e.target.value)}
+                  disabled={loadingId === property._id}
+                  className="border rounded px-2 py-1 bg-white dark:bg-gray-700 text-gray-800 dark:text-white text-sm"
+                >
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </td>
+              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{property.city}</td>
+              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">1200 Sq.ft</td>
+              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">1800 Sq.ft</td>
+              <td className="px-4 py-3 text-gray-900 dark:text-gray-100">Unfurnished</td>
+              <td className="px-4 py-3 text-center">
+                <div className="flex justify-center items-center gap-3">
+                  <button className="text-green-500 text-xl" onClick={() => handlePropertInfo(property)}>
+                    <FaEye />
+                  </button>
+                  <button className="text-red-500 text-xl" onClick={() => handleDelete(property._id)}>
+                    <RiDeleteBin5Line />
+                  </button>
+                </div>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {filteredData.map(property => (
-              <tr key={property._id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
-                <td className="px-6 py-4 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
-                <td className="px-6 py-4">
-                  <select
-                    value={property.status ? "Active" : "Inactive"}
-                    onChange={(e) => updateStatus(property._id, e.target.value)}
-                    disabled={loadingId === property._id}
-                    className="border rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                  </select>
-                </td>
-                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">{property.city}</td>
-                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">1200 Sq.ft</td>
-                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">1800 Sq.ft</td>
-                <td className="px-6 py-4 text-gray-900 dark:text-gray-100">Unfurnished</td>
-                <td className="px-6 py-4 text-center">
-                  <div className="flex space-x-3">
-                    <button className="text-green-500 text-2xl" onClick={()=>handlePropertInfo(property)}>
-                      <FaEye />
-                    </button>
-                    <button className="text-red-500 text-2xl" onClick={() => handleDelete(property._id)}>
-                      <RiDeleteBin5Line />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
