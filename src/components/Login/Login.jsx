@@ -48,7 +48,7 @@ const handleLogin = async (e) => {
   return (
     <div className="flex h-screen ">
       {/* Left Section - Form */}
-      <div className="w-full lg:w-1/2 flex justify-center flex-col px-8 lg:px-20">
+      <div className="w-full lg:w-1/2 flex justify-center flex-col px-8 lg:px-20 bg-gray-200">
         <img src={logo} alt="Rental Surat" className="w-32 " />
         <h2 className="text-lg text-gray-500">Welcome Back !!!</h2>
         <h1 className="text-3xl font-bold mb-8">Login</h1>
