@@ -4,9 +4,9 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import usePropertyManagement from '../../Hoocks/usePropertyManagement';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { addtoggleInformation, deleteProject } from '../../utils/PropertyManagementSlice';
+import { addtoggleInformation, deleteProject, showPropertyInformation } from '../../utils/PropertyManagementSlice';
 
-const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) => {
+const PropertyManagementTable = ({ searchQuery, postedByFilter }) => {
   const dispatch = useDispatch();
   const propertyInformation = useSelector(store => store.PropertyInfo.propertyInformation);
   usePropertyManagement();
@@ -54,7 +54,8 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
   };
 
   const handlePropertInfo = (property) => {
-    dispatch(addtoggleInformation(property));
+    dispatch(addtoggleInformation());
+    dispatch(showPropertyInformation(property));
   };
 
   const handleDelete = async (id) => {
@@ -70,26 +71,16 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
     }
   };
 
-  // Filtered + Paginated Data
   const filteredData = useMemo(() => {
     return localData.filter(item => {
+      const isActive = item.status === true;
       const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
-
-      const matchesStatus = (() => {
-        const status = statusFilter.toLowerCase();
-        if (status === 'all') return true;
-        if (status === 'active') return item.status === true;
-        if (status === 'inactive') return item.status === false;
-        return item.statusType?.toLowerCase() === status;
-      })();
-
       const matchesPostedBy =
         postedByFilter === 'all' ||
         item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
-
-      return matchesSearch && matchesStatus && matchesPostedBy;
+      return isActive && matchesSearch && matchesPostedBy;
     });
-  }, [localData, searchQuery, statusFilter, postedByFilter]);
+  }, [localData, searchQuery, postedByFilter]);
 
   const indexOfLast = currentPage * rowsPerPage;
   const indexOfFirst = indexOfLast - rowsPerPage;
@@ -97,8 +88,8 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
   useEffect(() => {
-    setCurrentPage(1); // Reset page to 1 on filters/search change
-  }, [searchQuery, statusFilter, postedByFilter]);
+    setCurrentPage(1);
+  }, [searchQuery, postedByFilter]);
 
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
@@ -168,7 +159,6 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
         </tbody>
       </table>
 
-      {/* Pagination Controls */}
       {filteredData.length > rowsPerPage && (
         <div className="flex justify-center items-center gap-2 p-4">
           <button
@@ -184,7 +174,7 @@ const PropertyManagementTable = ({ searchQuery, statusFilter, postedByFilter }) 
               key={num}
               onClick={() => setCurrentPage(num + 1)}
               className={`px-3 py-1 rounded ${currentPage === num + 1
-                ? 'bg-green-500 text-white'
+                ? 'bg-green-500 text-white '
                 : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
                 } hover:bg-gray-300 dark:hover:bg-gray-600`}
             >

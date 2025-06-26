@@ -2,11 +2,10 @@ import './App.css';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-
 import DashBoard from './components/dashBoard/DashBoard';
 import UserManagement from './components/userManagement/UserManagement';
 import PropertyManagementPage from './components/propertyManagement/PropertyManagementPage';
-import InactiveRequext from './components/InactiveRequext';
+import InactiveRequext from './components/listing&InactiveRequest/InactiveRequext';
 import SlideManager from './components/sliderManagemt/SlideManager';
 import Notification from './components/Notification/Notification';
 import Settings from './components/Settings/Settings';

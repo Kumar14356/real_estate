@@ -116,7 +116,7 @@ if (newStatus) {
 
         <div className="mt-6 flex justify-end">
           <button
-            className="px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md w-full sm:w-auto"
+            className="px-6 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md w-full sm:w-auto dark:bg-gray-700 dark:text-gray-300"
             onClick={closeUserInfo}
           >
             Close

@@ -49,8 +49,8 @@ const ManagemntTable = () => {
           onClick={() => handlePageClick(i)}
           className={`px-3 py-1 rounded-md border text-sm ${
             currentPage === i
-              ? "bg-green-500 text-white dark:bg-gray-800 dark:text-white dark:hover:text-white"
-              : "bg-white text-gray-700 hover:bg-green-500 dark:bg-gray-800 dark:text-white dark:hover:text-white"
+              ? "bg-green-500 text-white dark:hover:text-white"
+              : "bg-white text-gray-700 hover:bg-green-500 dark:bg-gray-700 dark:text-gray-200"
           }`}
         >
           {i}
