@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addtoggleInformation, deleteProject, showPropertyInformation } from '../../utils/PropertyManagementSlice';
 
-const PropertyManagementTable = ({ searchQuery, postedByFilter }) => {
+const PropertyManagementTable = ({ searchQuery, postedByFilter ,statusFilter}) => {
   const dispatch = useDispatch();
   const propertyInformation = useSelector(store => store.PropertyInfo.propertyInformation);
   usePropertyManagement();
@@ -71,16 +71,21 @@ const PropertyManagementTable = ({ searchQuery, postedByFilter }) => {
     }
   };
 
-  const filteredData = useMemo(() => {
-    return localData.filter(item => {
-      const isActive = item.status === true;
-      const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesPostedBy =
-        postedByFilter === 'all' ||
-        item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
-      return isActive && matchesSearch && matchesPostedBy;
-    });
-  }, [localData, searchQuery, postedByFilter]);
+const filteredData = useMemo(() => {
+  return localData.filter(item => {
+    const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesPostedBy =
+      postedByFilter === 'all' ||
+      item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
+    const matchesStatus =
+      statusFilter === 'all' ||
+      (statusFilter === 'Active' && item.status === true) ||
+      (statusFilter === 'Inactive' && item.status === false) ||
+      (statusFilter === 'For Sale' && item.saleType === 'For Sale') ||
+      (statusFilter === 'For Rent' && item.saleType === 'For Rent');
+    return matchesSearch && matchesPostedBy && matchesStatus;
+  });
+}, [localData, searchQuery, postedByFilter, statusFilter]);
 
   const indexOfLast = currentPage * rowsPerPage;
   const indexOfFirst = indexOfLast - rowsPerPage;
@@ -119,7 +124,9 @@ const PropertyManagementTable = ({ searchQuery, postedByFilter }) => {
               </td>
             </tr>
           ) : (
-            currentData.map(property => (
+            currentData
+             .filter(property => property.status === true) 
+            .map(property => (
               <tr key={property._id} className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
                 <td className="px-4 py-3 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
                 <td className="px-4 py-3">

@@ -11,7 +11,7 @@ const usePropertyManagement = () => {
 
   const getUserProfile = async () => {
     try {
-      const response = await fetch('https://realstate-2.onrender.com/api/v1/project', {
+      const response = await fetch('https://realstate-2.onrender.com/api/v1/project?page=1&limit=100000', {
       method: 'GET',
     });
       const json = await response.json();

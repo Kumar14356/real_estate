@@ -18,7 +18,7 @@ const InactiveRequest = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await fetch('https://realstate-2.onrender.com/api/v1/project');
+      const res = await fetch('https://realstate-2.onrender.com/api/v1/project?page=1&limit=100000');
       const data = await res.json();
       dispatch(setProjectList(data.data || []));
     } catch (err) {
