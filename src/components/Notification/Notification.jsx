@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import useUserManagement from "../../Hoocks/useUserManagemnt";
+import { toast } from "react-toastify";
 
 const Notification = () => {
   useUserManagement()
@@ -52,16 +53,16 @@ const Notification = () => {
       });
    
       if (response.ok) {
-        alert("✅ Notification sent successfully");
+        toast.success("Ding! The user has been notified");
         setTitle("");
         setDescription("");
         setSelectedUsers([]);
       } else {
-        alert("❌ Failed to send notification");
+        toast.warning("Retry needed — notification failed to send.");
       }
     } catch (error) {
       console.error("Error sending notification:", error);
-      alert("❌ Failed to send notification. Please check your server.");
+      toast.alert(" Error sending alert. Server might be down — please investigate.");
     }
   };
 

@@ -75,7 +75,7 @@ const ManagemntTable = () => {
         <button
           onClick={() => handlePageClick(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`px-3 py-1 border rounded-md text-sm ${
+          className={`px-3 border rounded-md text-sm ${
             currentPage === totalPages
               ? "bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-800"
               : "bg-white text-gray-700 hover:bg-green-500 dark:bg-gray-800 dark:text-white"
@@ -89,7 +89,7 @@ const ManagemntTable = () => {
 
   return (
     <div className="px-2 sm:px-10">
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <div className="pb-5 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className="bg-gray-50 dark:bg-gray-900">
             <tr>
@@ -139,10 +139,11 @@ const ManagemntTable = () => {
             )}
           </tbody>
         </table>
+         {/* Property-style pagination */}
+      {filteredUsers.length > USERS_PER_PAGE && renderPagination()}
       </div>
 
-      {/* Property-style pagination */}
-      {filteredUsers.length > USERS_PER_PAGE && renderPagination()}
+     
     </div>
   );
 };

@@ -10,6 +10,7 @@ import SlideManager from './components/sliderManagemt/SlideManager';
 import Notification from './components/Notification/Notification';
 import Settings from './components/Settings/Settings';
 import Login from './components/Login/Login';
+import SplashScreen from './components/SplashScreen'; // <- Import SplashScreen
 import Navbar from './components/Navbar';
 import Error404 from './components/Error/Error404';
 
@@ -34,9 +35,9 @@ function App() {
     setIsAuthenticated(!!localStorage.getItem('token'));
   }, [location]);
 
-  // Define all valid routes
   const validRoutes = [
     '/',
+    '/splash',
     '/login',
     '/usermanagement',
     '/propertymanagement',
@@ -47,7 +48,7 @@ function App() {
   ];
 
   const isValidRoute = validRoutes.includes(location.pathname);
-  const shouldShowNavbar = isAuthenticated && location.pathname !== '/login' && isValidRoute;
+  const shouldShowNavbar = isAuthenticated && location.pathname !== '/login' && location.pathname !== '/splash' && isValidRoute;
 
   return (
     <div className="flex">
@@ -55,14 +56,16 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="app flex-1">
         <Routes>
+          <Route path="/" element={<Navigate to="/splash" replace />} />
+          <Route path="/splash" element={<SplashScreen />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<PrivateRoute><DashBoard /></PrivateRoute>} />
           <Route path="/usermanagement" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
           <Route path="/propertymanagement" element={<PrivateRoute><PropertyManagementPage /></PrivateRoute>} />
           <Route path="/inactive-requext" element={<PrivateRoute><InactiveRequext /></PrivateRoute>} />
           <Route path="/slide-manager" element={<PrivateRoute><SlideManager /></PrivateRoute>} />
           <Route path="/notification" element={<PrivateRoute><Notification /></PrivateRoute>} />
           <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><DashBoard /></PrivateRoute>} />
           <Route path="*" element={<Error404 />} />
         </Routes>
       </div>
@@ -71,12 +74,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
