@@ -2,6 +2,7 @@ import './App.css';
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+
 import DashBoard from './components/dashBoard/DashBoard';
 import UserManagement from './components/userManagement/UserManagement';
 import PropertyManagementPage from './components/propertyManagement/PropertyManagementPage';
@@ -10,8 +11,8 @@ import SlideManager from './components/sliderManagemt/SlideManager';
 import Notification from './components/Notification/Notification';
 import Settings from './components/Settings/Settings';
 import Login from './components/Login/Login';
-import SplashScreen from './components/SplashScreen'; // <- Import SplashScreen
 import Navbar from './components/Navbar';
+import SplashScreen from './components/SplashScreen'; // ✅ Splash component
 import Error404 from './components/Error/Error404';
 
 import { ToastContainer } from 'react-toastify';
@@ -26,6 +27,7 @@ function App() {
   const location = useLocation();
   const darkMode = useSelector((state) => state.theme.darkMode);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [splashShown, setSplashShown] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
@@ -35,20 +37,32 @@ function App() {
     setIsAuthenticated(!!localStorage.getItem('token'));
   }, [location]);
 
+  useEffect(() => {
+    // Show splash screen for ~2.8 seconds once on app load
+    const timer = setTimeout(() => setSplashShown(true), 2800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const validRoutes = [
     '/',
-    '/splash',
     '/login',
     '/usermanagement',
     '/propertymanagement',
     '/inactive-requext',
     '/slide-manager',
     '/notification',
-    '/settings'
+    '/settings',
+    '/dashboard'
   ];
 
   const isValidRoute = validRoutes.includes(location.pathname);
-  const shouldShowNavbar = isAuthenticated && location.pathname !== '/login' && location.pathname !== '/splash' && isValidRoute;
+  const shouldShowNavbar =
+    isAuthenticated &&
+    location.pathname !== '/login' &&
+    isValidRoute;
+
+  // 🔁 Show SplashScreen once, before anything else
+  if (!splashShown) return <SplashScreen />;
 
   return (
     <div className="flex">
@@ -56,8 +70,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="app flex-1">
         <Routes>
-          <Route path="/" element={<Navigate to="/splash" replace />} />
-          <Route path="/splash" element={<SplashScreen />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/usermanagement" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
           <Route path="/propertymanagement" element={<PrivateRoute><PropertyManagementPage /></PrivateRoute>} />
