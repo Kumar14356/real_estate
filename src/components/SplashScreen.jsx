@@ -48,7 +48,7 @@ const SplashScreen = () => {
           alt="Rental Surat"
           className="mx-auto w-20 mb-4"
         />
-        <h2 className="text-xl font-semibold mb-1">Welcome to Rental Surat</h2>
+        <h2 className="text-xl font-semibold mb-1">Welcome to Real Estate</h2>
         <h1 className="text-2xl font-bold text-gray-800 mb-2">{title}</h1>
         <p className="text-gray-500">{subtitle}</p>
         <div className="flex justify-center mt-4 space-x-2">
