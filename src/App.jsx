@@ -1,5 +1,5 @@
 import './App.css';
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
@@ -12,7 +12,7 @@ import Notification from './components/Notification/Notification';
 import Settings from './components/Settings/Settings';
 import Login from './components/Login/Login';
 import Navbar from './components/Navbar';
-import SplashScreen from './components/SplashScreen'; // ✅ Splash component
+import SplashScreen from './components/SplashScreen';
 import Error404 from './components/Error/Error404';
 
 import { ToastContainer } from 'react-toastify';
@@ -27,7 +27,9 @@ function App() {
   const location = useLocation();
   const darkMode = useSelector((state) => state.theme.darkMode);
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
-  const [splashShown, setSplashShown] = useState(false);
+  const [splashShown, setSplashShown] = useState(() => {
+    return sessionStorage.getItem('splashShown') === 'true' || localStorage.getItem('token');
+  });
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
@@ -38,10 +40,15 @@ function App() {
   }, [location]);
 
   useEffect(() => {
-    // Show splash screen for ~2.8 seconds once on app load
-    const timer = setTimeout(() => setSplashShown(true), 2800);
-    return () => clearTimeout(timer);
-  }, []);
+    // Only show splash if not logged in AND not already shown
+    if (!splashShown && !localStorage.getItem('token')) {
+      const timer = setTimeout(() => {
+        sessionStorage.setItem('splashShown', 'true');
+        setSplashShown(true);
+      }, 2800);
+      return () => clearTimeout(timer);
+    }
+  }, [splashShown]);
 
   const validRoutes = [
     '/',
@@ -61,8 +68,8 @@ function App() {
     location.pathname !== '/login' &&
     isValidRoute;
 
-  // 🔁 Show SplashScreen once, before anything else
-  if (!splashShown) return <SplashScreen />;
+  // Show splash screen once per session only before login
+  if (!splashShown && !localStorage.getItem('token')) return <SplashScreen />;
 
   return (
     <div className="flex">
@@ -70,7 +77,7 @@ function App() {
       <ToastContainer position="top-right" autoClose={3000} />
       <div className="app flex-1">
         <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/usermanagement" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
           <Route path="/propertymanagement" element={<PrivateRoute><PropertyManagementPage /></PrivateRoute>} />
