@@ -28,8 +28,7 @@ const handleLogin = async (e) => {
     });
 
     const data = await response.json();
-    console.log('Login Response:', data);
-
+  
     if (data.success) {
       localStorage.setItem('user', JSON.stringify(data.user));
       localStorage.setItem('token', data.token);

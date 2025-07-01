@@ -66,7 +66,7 @@ const navigate = useNavigate();
         {/* Logo */}
         <div className='flex items-center justify-center lg:justify-between px-4 py-6 border-b dark:border-gray-600'>
           <img
-            className="w-15 lg:w-20 dark:lg:w-20"
+            className="w-15 lg:w-20 dark:lg:w-18"
             src={darkMode ? darkLogo : logo}
             alt="logo"
           />

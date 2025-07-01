@@ -74,7 +74,7 @@ function App() {
   return (
     <div className="flex">
       {shouldShowNavbar && <Navbar />}
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-center" autoClose={3000} />
       <div className="app flex-1">
         <Routes>
           <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} />

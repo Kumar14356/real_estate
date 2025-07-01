@@ -16,7 +16,7 @@ const UserInfo = () => {
   };
 
   return (
-    <div className="lg:px-10 mt-5">
+    <div className="lg:px-10 mt-5 overflow-hidden">
       <div>
         <h1 className="text-3xl md:text-3xl font-bold text-gray-800 dark:text-gray-200">User Management</h1>
         <h4 className="mt-2 text-sm md:text-base tracking-normal text-gray-600 dark:text-gray-300">

@@ -80,9 +80,9 @@ const Notification = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6 dark:bg-gray-800 px-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 py-6 dark:bg-gray-700 px-3">
           {/* Left: Notification Form */}
-          <div className="bg-white rounded-xl p-6 shadow-lg h-[550px] dark:bg-gray-700">
+          <div className="bg-white rounded-xl p-6 shadow-lg h-[550px] dark:bg-gray-800">
             <h2 className="text-lg font-medium mb-4">Create Notification</h2>
             <div className="space-y-6">
               <input
@@ -90,13 +90,13 @@ const Notification = () => {
                 placeholder="Notification Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full p-3 rounded-lg border border-gray-200"
+                className="w-full p-3 rounded-lg border border-gray-200 dark:bg-gray-800"
               />
               <textarea
                 placeholder="Notification Description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full p-3 rounded-lg border border-gray-200 h-32"
+                className="w-full p-3 rounded-lg border border-gray-200 h-32 dark:bg-gray-800"
               />
               <button
                 onClick={handleSend}
@@ -108,24 +108,24 @@ const Notification = () => {
           </div>
 
           {/* Right: Recipient List */}
-          <div className="bg-white rounded-xl p-4 shadow-lg h-[550px] dark:bg-gray-700">
+          <div className="bg-white rounded-xl p-4 shadow-lg h-[550px] dark:bg-gray-800">
             <h2 className="text-lg font-medium mb-4">Select Recipient</h2>
             <input
               type="text"
               placeholder="Search users..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full border border-gray-200 pl-4 p-3 mb-4 rounded-xl"
+              className="w-full border border-gray-200 pl-4 p-3 mb-4 rounded-xl dark:bg-gray-800"
             />
             <div className="flex items-center mb-4 space-x-6">
-              <button onClick={selectAll} className="text-blue-600 text-sm">
+              <button onClick={selectAll} className="text-blue-600 text-sm dark:text-blue-400">
                 Select All
               </button>
-              <button onClick={deselectAll} className="text-red-600 text-sm">
+              <button onClick={deselectAll} className="text-red-600 text-sm dark:text-red-400">
                 Deselect All
               </button>
             </div>
-            <div className="h-80 overflow-y-scroll border border-gray-200 rounded p-2 bg-gray-50 dark:bg-gray-700">
+            <div className="h-80 overflow-y-scroll border border-gray-200 rounded p-2 bg-gray-50 dark:bg-gray-800">
               {filteredUsers.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full text-gray-500">
                   <img
@@ -144,7 +144,7 @@ const Notification = () => {
                         <p className="font-medium">
                           {user.username || "N/A"}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-600 dark:text-gray-200">
                           Status:{" "}
                           {user.status === true
                             ? "Inactive"

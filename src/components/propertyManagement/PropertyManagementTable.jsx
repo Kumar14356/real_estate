@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addtoggleInformation, deleteProject, showPropertyInformation } from '../../utils/PropertyManagementSlice';
 
-const PropertyManagementTable = ({ searchQuery, postedByFilter ,statusFilter}) => {
+const PropertyManagementTable = ({ searchQuery, postedByFilter, statusFilter }) => {
   const dispatch = useDispatch();
   const propertyInformation = useSelector(store => store.PropertyInfo.propertyInformation);
   usePropertyManagement();
@@ -15,6 +15,9 @@ const PropertyManagementTable = ({ searchQuery, postedByFilter ,statusFilter}) =
   const [loadingId, setLoadingId] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 8;
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
 
   useEffect(() => {
     if (Array.isArray(propertyInformation)) {
@@ -47,7 +50,7 @@ const PropertyManagementTable = ({ searchQuery, postedByFilter ,statusFilter}) =
         toast.warning("Property is now Inactive and hidden from users.");
       }
     } catch (error) {
-      toast.error(error + " Failed to update status.");
+      toast.error("Failed to update status.");
     } finally {
       setLoadingId(null);
     }
@@ -58,43 +61,56 @@ const PropertyManagementTable = ({ searchQuery, postedByFilter ,statusFilter}) =
     dispatch(showPropertyInformation(property));
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this project?");
-    if (!confirmDelete) return;
+  const handleDeleteClick = (id) => {
+    setSelectedPropertyId(id);
+    setShowDeleteModal(true);
+  };
 
+  const confirmDelete = async () => {
     try {
-      await dispatch(deleteProject(id)).unwrap();
+      await dispatch(deleteProject(selectedPropertyId)).unwrap();
       toast.success("Project deleted successfully");
-      setLocalData(prev => prev.filter(item => item._id !== id));
+      setLocalData(prev => prev.filter(item => item._id !== selectedPropertyId));
     } catch {
       toast.error("Failed to delete project");
+    } finally {
+      setShowDeleteModal(false);
+      setSelectedPropertyId(null);
     }
   };
 
-const filteredData = useMemo(() => {
-  return localData.filter(item => {
-    const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesPostedBy =
-      postedByFilter === 'all' ||
-      item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
-    const matchesStatus =
-      statusFilter === 'all' ||
-      (statusFilter === 'Active' && item.status === true) ||
-      (statusFilter === 'Inactive' && item.status === false) ||
-      (statusFilter === 'For Sale' && item.saleType === 'For Sale') ||
-      (statusFilter === 'For Rent' && item.saleType === 'For Rent');
-    return matchesSearch && matchesPostedBy && matchesStatus;
-  });
-}, [localData, searchQuery, postedByFilter, statusFilter]);
+  const cancelDelete = () => {
+    setShowDeleteModal(false);
+    setSelectedPropertyId(null);
+  };
+
+  const filteredData = useMemo(() => {
+    return localData.filter(item => {
+      const matchesSearch = item.projectname?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesPostedBy =
+        postedByFilter === 'all' ||
+        item.postedBy?.toLowerCase() === postedByFilter.toLowerCase();
+      const matchesStatus =
+        statusFilter === 'all' ||
+        (statusFilter === 'Active' && item.status === true) ||
+        (statusFilter === 'Inactive' && item.status === false) ||
+        (statusFilter === 'For Sale' && item.saleType === 'For Sale') ||
+        (statusFilter === 'For Rent' && item.saleType === 'For Rent');
+      return matchesSearch && matchesPostedBy && matchesStatus;
+    });
+  }, [localData, searchQuery, postedByFilter, statusFilter]);
+
+  // ✅ Show only active properties before pagination
+  const activeData = filteredData.filter(property => property.status === true);
 
   const indexOfLast = currentPage * rowsPerPage;
   const indexOfFirst = indexOfLast - rowsPerPage;
-  const currentData = filteredData.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+  const currentData = activeData.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(activeData.length / rowsPerPage);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, postedByFilter]);
+  }, [searchQuery, postedByFilter, statusFilter]);
 
   return (
     <div className="w-full overflow-x-auto rounded-lg shadow border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
@@ -115,7 +131,7 @@ const filteredData = useMemo(() => {
             <tr>
               <td colSpan="7" className="py-10 text-center">
                 <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4 text-gray-400 dark:text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 9.75h.008v.008H9.75V9.75zM3 17.25l5.25-5.25M12 3v1.5M21 12h-1.5M4.5 12H3m9 9v-1.5M17.25 3l-5.25 5.25M21 4.5l-5.25 5.25M3 4.5l5.25 5.25" />
                   </svg>
                   <p className="text-lg font-semibold">No Properties Found</p>
@@ -124,11 +140,9 @@ const filteredData = useMemo(() => {
               </td>
             </tr>
           ) : (
-            currentData
-             .filter(property => property.status === true) 
-            .map(property => (
+            currentData.map(property => (
               <tr key={property._id} className="hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                <td className="px-4 py-3 whitespace-nowrap text-gray-900 dark:text-gray-100">{property.projectname}</td>
+                <td className="px-4 py-3 text-gray-900 dark:text-gray-100">{property.projectname}</td>
                 <td className="px-4 py-3">
                   <select
                     value={property.status ? "Active" : "Inactive"}
@@ -155,7 +169,7 @@ const filteredData = useMemo(() => {
                     <button className="text-green-500 text-xl hover:text-green-600 transition" onClick={() => handlePropertInfo(property)}>
                       <FaEye />
                     </button>
-                    <button className="text-red-500 text-xl hover:text-red-600 transition" onClick={() => handleDelete(property._id)}>
+                    <button className="text-red-500 text-xl hover:text-red-600 transition" onClick={() => handleDeleteClick(property._id)}>
                       <RiDeleteBin5Line />
                     </button>
                   </div>
@@ -166,7 +180,8 @@ const filteredData = useMemo(() => {
         </tbody>
       </table>
 
-      {filteredData.length > rowsPerPage && (
+      {/* Pagination */}
+      {activeData.length > rowsPerPage && (
         <div className="flex justify-center items-center gap-2 p-4">
           <button
             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
@@ -175,20 +190,17 @@ const filteredData = useMemo(() => {
           >
             Prev
           </button>
-
           {[...Array(totalPages).keys()].map(num => (
             <button
               key={num}
               onClick={() => setCurrentPage(num + 1)}
               className={`px-3 py-1 rounded ${currentPage === num + 1
-                ? 'bg-green-500 text-white '
-                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'
-                } hover:bg-gray-300 dark:hover:bg-gray-600`}
+                ? 'bg-green-500 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white'} hover:bg-gray-300 dark:hover:bg-gray-600`}
             >
               {num + 1}
             </button>
           ))}
-
           <button
             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
@@ -196,6 +208,32 @@ const filteredData = useMemo(() => {
           >
             Next
           </button>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-[90%] max-w-md text-center">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Confirm Deletion</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Are you sure you want to delete this project? This action cannot be undone.
+            </p>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={confirmDelete}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+              >
+                Yes, Delete
+              </button>
+              <button
+                onClick={cancelDelete}
+                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
